@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Interactive Power Bank</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 24px;
+      font: 1rem/1.5 system-ui, sans-serif;
+      color: #182639;
+      background: #eef2f6;
+    }
+    main {
+      max-width: 520px;
+      margin: 24px auto;
+      padding: 24px;
+      border: 1px solid #bac6d5;
+      border-radius: 16px;
+      background: white;
+    }
+    h1, h2, p { margin: 0 0 12px; }
+    h2 { font-size: 1rem; }
+    input { width: 100%; accent-color: #284e88; }
+    .cables { display: flex; flex-wrap: wrap; gap: 12px; margin: 20px 0; }
+    .cable {
+      flex: 1 1 160px;
+      padding: 14px;
+      border-radius: 10px;
+      background: #edf1f5;
+    }
+    .cable[data-state="waiting"] { background: #fff0c8; }
+    .cable[data-state="charging"] { background: #d9f5e5; }
+    button {
+      padding: 8px 12px;
+      border: 1px solid #284e88;
+      border-radius: 6px;
+      color: #182639;
+      background: white;
+      font: inherit;
+      cursor: pointer;
+    }
+    #power { background: #284e88; color: white; }
+    #summary { font-weight: 700; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Interactive Power Bank</h1>
+    <label for="battery">Battery level <span id="battery-value">70%</span></label>
+    <input id="battery" type="range" min="0" max="100" value="70">
+    <p>Plug in at 50% or higher to start charging automatically. Below 50%, press power after plugging in.</p>
+
+    <div class="cables">
+      <section class="cable" id="cable-1">
+        <h2>Cable 1</h2>
+        <p class="status" aria-live="polite">Disconnected</p>
+        <button type="button">Plug in Cable 1</button>
+      </section>
+      <section class="cable" id="cable-2">
+        <h2>Cable 2</h2>
+        <p class="status" aria-live="polite">Disconnected</p>
+        <button type="button">Plug in Cable 2</button>
+      </section>
+    </div>
+
+    <p id="summary" role="status">0 devices charging</p>
+    <button id="power" type="button">Press power</button>
+  </main>
+
+  <script>
+    // State
+    let batteryLevel = 70;
+    let cable1 = "disconnected";
+    let cable2 = "disconnected";
+
+    const batteryInput = document.querySelector("#battery");
+    const firstCable = document.querySelector("#cable-1");
+    const secondCable = document.querySelector("#cable-2");
+
+    // Transition rules
+    function toggleCable(state) {
+      if (state !== "disconnected") {
+        return "disconnected";
+      }
+
+      if (batteryLevel >= 50) {
+        return "charging";
+      } else {
+        return "waiting";
+      }
+    }
+
+    // Visual feedback
+    function renderCable(panel, state, number) {
+      panel.dataset.state = state;
+      panel.querySelector(".status").textContent = state[0].toUpperCase() + state.slice(1);
+      const action = state === "disconnected" ? "Plug in" : "Unplug";
+      panel.querySelector("button").textContent = `${action} Cable ${number}`;
+    }
+
+    function render() {
+      document.querySelector("#battery-value").textContent = `${batteryLevel}%`;
+      renderCable(firstCable, cable1, 1);
+      renderCable(secondCable, cable2, 2);
+      const count = [cable1, cable2].filter(state => state === "charging").length;
+      const deviceLabel = count === 1 ? "device" : "devices";
+      document.querySelector("#summary").textContent = `${count} ${deviceLabel} charging`;
+    }
+
+    // Event handlers
+    batteryInput.addEventListener("input", () => {
+      batteryLevel = Number(batteryInput.value);
+      render();
+    });
+
+    firstCable.querySelector("button").addEventListener("click", () => {
+      cable1 = toggleCable(cable1);
+      render();
+    });
+
+    secondCable.querySelector("button").addEventListener("click", () => {
+      cable2 = toggleCable(cable2);
+      render();
+    });
+
+    document.querySelector("#power").addEventListener("click", () => {
+      if (cable1 === "waiting") {
+        cable1 = "charging";
+      }
+      if (cable2 === "waiting") {
+        cable2 = "charging";
+      }
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>
