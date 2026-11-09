@@ -1,0 +1,103 @@
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 24px 16px;
+  font: 1rem/1.5 system-ui, sans-serif;
+  color: #182639;
+  background: #eef2f6;
+}
+main { max-width: 440px; margin: 16px auto; }
+h1 { margin: 0 0 18px; font-size: 1.65rem; }
+h2, p { margin: 0 0 6px; }
+h2 { font-size: 1rem; }
+.bank {
+  position: relative;
+  display: grid;
+  align-content: space-between;
+  min-height: 184px;
+  padding: 23px 26px 25px;
+  border: 2px solid #161f29;
+  border-radius: 24px;
+  color: #f6f9ff;
+  background: linear-gradient(145deg, #3d4957, #242e3a 65%);
+  box-shadow: inset 0 1px #718093, inset 0 -6px #151f2a, 0 6px 12px #18263933;
+}
+.bank-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.bank-name { margin: 5px 0 0; font-size: .875rem; font-weight: 600; letter-spacing: .08em; }
+.display {
+  width: fit-content;
+  padding: 8px 13px;
+  border-radius: 8px;
+  color: #deefff;
+  background: #111a24;
+  font-variant-numeric: tabular-nums;
+}
+#battery-value { display: block; font-size: 1.55rem; font-weight: 700; }
+#summary { margin: 0; font-size: .875rem; }
+button {
+  min-height: 44px;
+  padding: 7px 10px;
+  border: 1px solid #a5b4c6;
+  border-radius: 8px;
+  color: #182639;
+  background: white;
+  font: inherit;
+  cursor: pointer;
+}
+button:focus-visible, input:focus-visible { outline: 3px solid #2877d3; outline-offset: 3px; }
+#power {
+  width: 46px;
+  height: 46px;
+  padding: 10px;
+  border-color: #6b7c8d;
+  border-radius: 50%;
+  color: #f6f9ff;
+  background: #19232e;
+  box-shadow: inset 0 1px #526071;
+}
+#power:active { background: #46596f; }
+.ports, .cables { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.ports { position: absolute; inset: auto 0 -8px; pointer-events: none; }
+.ports span {
+  justify-self: center;
+  width: 24px;
+  height: 14px;
+  border: 2px solid #151f2a;
+  border-radius: 4px;
+  background: #586879;
+}
+.cable { --wire: #153d75; text-align: center; }
+.cable + .cable { --wire: #70b9f1; }
+.wire { display: block; width: 100%; height: 105px; color: var(--wire); }
+.device {
+  display: block;
+  width: 104px;
+  height: 108px;
+  margin: 7px auto 0;
+}
+.cable[data-state="waiting"] .device,
+.cable[data-state="charging"] .device { transform: translateY(-12px); }
+.device-led { fill: #596575; }
+[data-state="waiting"] .device-led { fill: #ffc527; }
+[data-state="charging"] .device-led { fill: #28dc75; }
+.cable-name { font-size: .875rem; color: #46596f; }
+.status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  margin: 0 0 10px;
+  font-size: .875rem;
+}
+.light {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #303c4b;
+  box-shadow: inset 0 1px 3px #152031;
+}
+[data-state="waiting"] .light { background: #ffc527; box-shadow: 0 0 8px #e0a600; }
+[data-state="charging"] .light { background: #28dc75; box-shadow: 0 0 8px #1dba5d; }
+.battery-control { margin-top: 24px; padding-top: 14px; border-top: 1px solid #bac6d5; }
+input { display: block; width: 100%; margin: 6px 0 10px; accent-color: #284e88; }
+.hint { font-size: .875rem; }

@@ -4,139 +4,82 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Interactive Power Bank</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      padding: 24px;
-      font: 1rem/1.5 system-ui, sans-serif;
-      color: #182639;
-      background: #eef2f6;
-    }
-    main {
-      max-width: 520px;
-      margin: 24px auto;
-      padding: 24px;
-      border: 1px solid #bac6d5;
-      border-radius: 16px;
-      background: white;
-    }
-    h1, h2, p { margin: 0 0 12px; }
-    h2 { font-size: 1rem; }
-    input { width: 100%; accent-color: #284e88; }
-    .cables { display: flex; flex-wrap: wrap; gap: 12px; margin: 20px 0; }
-    .cable {
-      flex: 1 1 160px;
-      padding: 14px;
-      border-radius: 10px;
-      background: #edf1f5;
-    }
-    .cable[data-state="waiting"] { background: #fff0c8; }
-    .cable[data-state="charging"] { background: #d9f5e5; }
-    button {
-      padding: 8px 12px;
-      border: 1px solid #284e88;
-      border-radius: 6px;
-      color: #182639;
-      background: white;
-      font: inherit;
-      cursor: pointer;
-    }
-    #power { background: #284e88; color: white; }
-    #summary { font-weight: 700; }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <main>
     <h1>Interactive Power Bank</h1>
-    <label for="battery">Battery level <span id="battery-value">70%</span></label>
-    <input id="battery" type="range" min="0" max="100" value="70">
-    <p>Plug in at 50% or higher to start charging automatically. Below 50%, press power after plugging in.</p>
+    <div class="bank">
+      <div class="bank-top">
+        <p class="bank-name">POWER BANK</p>
+        <button id="power" type="button" aria-label="Press power">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M12 3v8M7 6a8 8 0 1 0 10 0"/>
+          </svg>
+        </button>
+      </div>
+      <div class="display">
+        <span id="battery-value">70%</span>
+        <p id="summary" role="status">0 devices charging</p>
+      </div>
+      <div class="ports" aria-hidden="true"><span></span><span></span></div>
+    </div>
 
     <div class="cables">
-      <section class="cable" id="cable-1">
-        <h2>Cable 1</h2>
-        <p class="status" aria-live="polite">Disconnected</p>
-        <button type="button">Plug in Cable 1</button>
+      <section class="cable" id="cable-1" data-state="disconnected">
+        <svg class="wire" viewBox="0 0 120 105" aria-hidden="true">
+          <path d="M60 0v12c0 19 -29 13 -29 32S60 64 60 82"
+                fill="none" stroke="currentColor" stroke-width="8"/>
+          <rect x="50" y="72" width="20" height="20" rx="5" fill="currentColor"/>
+          <rect x="54" y="90" width="12" height="10" rx="2" fill="#647286"/>
+        </svg>
+        <svg class="device" viewBox="0 0 104 108" aria-hidden="true">
+          <rect x="46" y="0" width="12" height="6" rx="2" fill="#151f2a"/>
+          <rect x="24" y="3" width="56" height="102" rx="10" fill="#242e3a"/>
+          <rect x="29" y="8" width="46" height="92" rx="6" fill="#d9e7f5"/>
+          <rect x="45" y="11" width="14" height="3" rx="1.5" fill="#46596f"/>
+          <rect x="40" y="46" width="23" height="13" rx="3" fill="none" stroke="#46596f" stroke-width="2"/>
+          <rect x="64" y="50" width="2" height="5" rx="1" fill="#46596f"/>
+          <rect class="device-led" x="43" y="49" width="17" height="7" rx="1"/>
+        </svg>
+        <h2>Phone</h2>
+        <p class="cable-name">Dark blue cable</p>
+        <p class="status" aria-live="polite">
+          <span class="light" aria-hidden="true"></span>
+          <span class="state-label">Disconnected</span>
+        </p>
+        <button type="button">Plug in phone</button>
       </section>
-      <section class="cable" id="cable-2">
-        <h2>Cable 2</h2>
-        <p class="status" aria-live="polite">Disconnected</p>
-        <button type="button">Plug in Cable 2</button>
+      <section class="cable" id="cable-2" data-state="disconnected">
+        <svg class="wire" viewBox="0 0 120 105" aria-hidden="true">
+          <path d="M60 0v12c0 19 29 13 29 32S60 64 60 82"
+                fill="none" stroke="currentColor" stroke-width="8"/>
+          <rect x="50" y="72" width="20" height="20" rx="5" fill="currentColor"/>
+          <rect x="54" y="90" width="12" height="10" rx="2" fill="#647286"/>
+        </svg>
+        <svg class="device" viewBox="0 0 104 108" aria-hidden="true">
+          <rect x="46" y="0" width="12" height="6" rx="2" fill="#515e70"/>
+          <rect x="8" y="3" width="88" height="60" rx="20" fill="#dbe3ed" stroke="#637389" stroke-width="2"/>
+          <path d="M9 30h86" stroke="#637389" stroke-width="2"/>
+          <circle class="device-led" cx="52" cy="44" r="4"/>
+        </svg>
+        <h2>Wireless earbuds</h2>
+        <p class="cable-name">Light blue cable</p>
+        <p class="status" aria-live="polite">
+          <span class="light" aria-hidden="true"></span>
+          <span class="state-label">Disconnected</span>
+        </p>
+        <button type="button">Plug in earbuds</button>
       </section>
     </div>
 
-    <p id="summary" role="status">0 devices charging</p>
-    <button id="power" type="button">Press power</button>
+    <div class="battery-control">
+      <label for="battery">Simulated battery level</label>
+      <input id="battery" type="range" min="0" max="100" value="70" aria-describedby="battery-hint">
+      <p class="hint" id="battery-hint">At 50% or higher, plugging in starts charging. Below 50%, plug in and then press power. Charging stops at 0%.</p>
+    </div>
   </main>
 
-  <script>
-    // State
-    let batteryLevel = 70;
-    let cable1 = "disconnected";
-    let cable2 = "disconnected";
-
-    const batteryInput = document.querySelector("#battery");
-    const firstCable = document.querySelector("#cable-1");
-    const secondCable = document.querySelector("#cable-2");
-
-    // Transition rules
-    function toggleCable(state) {
-      if (state !== "disconnected") {
-        return "disconnected";
-      }
-
-      if (batteryLevel >= 50) {
-        return "charging";
-      } else {
-        return "waiting";
-      }
-    }
-
-    // Visual feedback
-    function renderCable(panel, state, number) {
-      panel.dataset.state = state;
-      panel.querySelector(".status").textContent = state[0].toUpperCase() + state.slice(1);
-      const action = state === "disconnected" ? "Plug in" : "Unplug";
-      panel.querySelector("button").textContent = `${action} Cable ${number}`;
-    }
-
-    function render() {
-      document.querySelector("#battery-value").textContent = `${batteryLevel}%`;
-      renderCable(firstCable, cable1, 1);
-      renderCable(secondCable, cable2, 2);
-      const count = [cable1, cable2].filter(state => state === "charging").length;
-      const deviceLabel = count === 1 ? "device" : "devices";
-      document.querySelector("#summary").textContent = `${count} ${deviceLabel} charging`;
-    }
-
-    // Event handlers
-    batteryInput.addEventListener("input", () => {
-      batteryLevel = Number(batteryInput.value);
-      render();
-    });
-
-    firstCable.querySelector("button").addEventListener("click", () => {
-      cable1 = toggleCable(cable1);
-      render();
-    });
-
-    secondCable.querySelector("button").addEventListener("click", () => {
-      cable2 = toggleCable(cable2);
-      render();
-    });
-
-    document.querySelector("#power").addEventListener("click", () => {
-      if (cable1 === "waiting") {
-        cable1 = "charging";
-      }
-      if (cable2 === "waiting") {
-        cable2 = "charging";
-      }
-      render();
-    });
-
-    render();
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
